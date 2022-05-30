@@ -1,5 +1,6 @@
 package com.hzy.model.command;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import lombok.Setter;
 public class RmCommand extends AbstractCommand{
     private String key;
 
-    public RmCommand(String key, String value) {
+    public RmCommand(String key) {
         super(CommandTypeEnum.RM);
         this.key = key;
     }

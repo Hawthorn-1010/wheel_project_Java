@@ -1,6 +1,9 @@
 package com.hzy.model.command;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * User: hzy
@@ -8,6 +11,8 @@ import com.alibaba.fastjson.JSONObject;
  * Time: 17:35
  * Description:
  */
+@Getter
+@Setter
 public abstract class AbstractCommand implements Command{
     private CommandTypeEnum type;
 
