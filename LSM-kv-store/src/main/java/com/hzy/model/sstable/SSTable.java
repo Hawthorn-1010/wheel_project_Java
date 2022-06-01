@@ -169,6 +169,7 @@ public class SSTable implements Closeable {
 
             // 遍历完后，尾部数据不一定达到分段条件，需要写入
             if (partData.size() > 0) {
+                // 写入数据区
                 writeDataPart(partData);
             }
 
@@ -178,6 +179,7 @@ public class SSTable implements Closeable {
             // 保存稀疏索引
             byte[] indexBytes = JSONObject.toJSONString(sparseIndex).getBytes(StandardCharsets.UTF_8);
             tableInfo.setIndexStart(tableFile.getFilePointer());
+            // 向文件写入稀疏索引部分
             tableFile.write(indexBytes);
             tableInfo.setIndexLen(indexBytes.length);
             LoggerUtil.debug(LOGGER, "[SSTable][initFromIndex][sparseIndex]: {}", sparseIndex);
@@ -196,7 +198,7 @@ public class SSTable implements Closeable {
      */
     private void restoreFromFile() {
         try {
-            // 读取整个
+            // 读取文件索引
             TableInfo tableInfo = TableInfo.readFromFile(tableFile);
             LoggerUtil.debug(LOGGER, "[SSTable][restoreFromFile][tableInfo]: {}", tableInfo);
             // 读取稀疏索引

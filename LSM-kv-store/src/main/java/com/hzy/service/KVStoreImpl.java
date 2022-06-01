@@ -29,6 +29,8 @@ public class KVStoreImpl implements KVStore {
 
     public static final String TABLE = ".table";
     public static final String WAL = "wal";
+
+    // mode: 读取 + 写入
     public static final String RW_MODE = "rw";
     public static final String WAL_TMP = "walTmp";
 
@@ -82,7 +84,7 @@ public class KVStoreImpl implements KVStore {
                     Long time = Long.parseLong(fileName.substring(0, dotIndex));
                     ssTableTreeMap.put(time, SSTable.createFromFile(file.getAbsolutePath()));
                 } else if (file.isFile() && fileName.equals(WAL)) {
-                    //加载WAL
+                    // 加载WAL
                     walFile = file;
                     wal = new RandomAccessFile(file, RW_MODE);
                     restoreFromWal(wal);
@@ -207,6 +209,7 @@ public class KVStoreImpl implements KVStore {
             wal.close();
             //切换内存表后也要切换WAL
             File tmpWal = new File(dataDir + WAL_TMP);
+            // 新的转换成旧的日志
             if (tmpWal.exists()) {
                 if (!tmpWal.delete()) {
                     throw new RuntimeException("删除文件失败: walTmp");
@@ -215,6 +218,7 @@ public class KVStoreImpl implements KVStore {
             if (!walFile.renameTo(tmpWal)) {
                 throw new RuntimeException("重命名文件失败: walTmp");
             }
+            // 新的日志
             walFile = new File(dataDir + WAL);
             wal = new RandomAccessFile(walFile, RW_MODE);
         } catch (Throwable t) {
